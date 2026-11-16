@@ -60,11 +60,12 @@ struct DSButtonStyle: ButtonStyle {
     let style: DSButton.Style
 
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .foregroundStyle(foreground)
-            .background { background }
-            .opacity(configuration.isPressed ? 0.8 : 1)
-            .contentShape(Capsule())
+        DSButtonBody(isPressed: configuration.isPressed) {
+            configuration.label
+                .foregroundStyle(foreground)
+                .background { background }
+                .contentShape(Capsule())
+        }
     }
 
     private var foreground: Color {
@@ -87,6 +88,19 @@ struct DSButtonStyle: ButtonStyle {
                 .overlay { Capsule().fill(DSColor.textPrimary.opacity(0.16)) }
                 .overlay { Capsule().strokeBorder(DSColor.textPrimary.opacity(0.2), lineWidth: 1) }
         }
+    }
+}
+
+/// Dims the button while it is pressed and, more, while it is disabled (for example "Girar" while the
+/// drum spins). A button style cannot read the environment itself, so this view does it.
+private struct DSButtonBody<Label: View>: View {
+    let isPressed: Bool
+    @ViewBuilder let label: Label
+
+    @Environment(\.isEnabled) private var isEnabled
+
+    var body: some View {
+        label.opacity(isEnabled ? (isPressed ? 0.8 : 1) : 0.45)
     }
 }
 

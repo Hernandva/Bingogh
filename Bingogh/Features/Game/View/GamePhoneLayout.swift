@@ -29,7 +29,7 @@ struct GamePhoneLayout: View {
     private var drumPanel: some View {
         VStack(spacing: DSSpacing.large) {
             Spacer(minLength: 0)
-            DSDrum(radius: 150, turns: viewModel.drumTurns)
+            GameDrumStage(viewModel: viewModel, radius: 150, ballDiameter: 180)
             Spacer(minLength: 0)
             DSText(GameCounter.text(for: viewModel.viewData.draw), style: .counter)
             GameControls(viewModel: viewModel)

@@ -20,7 +20,7 @@ struct GamePadLayout: View {
         HStack(spacing: DSSpacing.xLarge + DSSpacing.medium) {
             VStack(spacing: DSSpacing.xLarge) {
                 Spacer(minLength: 0)
-                DSDrum(radius: 170, turns: viewModel.drumTurns)
+                GameDrumStage(viewModel: viewModel, radius: 170, ballDiameter: 260)
                 Spacer(minLength: 0)
                 controls
             }
@@ -35,7 +35,7 @@ struct GamePadLayout: View {
     private var portrait: some View {
         VStack(spacing: DSSpacing.xLarge) {
             HStack(spacing: DSSpacing.xLarge) {
-                DSDrum(radius: 150, turns: viewModel.drumTurns)
+                GameDrumStage(viewModel: viewModel, radius: 150, ballDiameter: 230)
                 VStack(spacing: DSSpacing.large) {
                     DSText(GameCounter.text(for: viewModel.viewData.draw), style: .counter)
                     controls

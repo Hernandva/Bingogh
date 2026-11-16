@@ -19,17 +19,54 @@ struct GameCallerBoard: View {
     }
 }
 
-/// "Girar" and "Cantar en voz alta", under the drum on iPhone and iPad.
+/// The drum, or the ball that has just come out in its place. When the spin ends the ball replaces the drum
+/// completely until the view model hides it, five seconds later or when "Girar" is pressed again; then the
+/// drum comes back. The drum keeps its place while hidden, so nothing else on screen moves. VoiceOver
+/// announces the ball.
+struct GameDrumStage: View {
+    let viewModel: GameViewModel
+    let radius: CGFloat
+    let ballDiameter: CGFloat
+    var playsSound = true
+
+    var body: some View {
+        DSDrum(radius: radius, turns: viewModel.drumTurns, playsSound: playsSound)
+            .opacity(viewModel.shownBall == nil ? 1 : 0)
+            .scaleEffect(viewModel.shownBall == nil ? 1 : 0.85)
+            .overlay {
+                if let number = viewModel.shownBall {
+                    DSBall(number: number, diameter: ballDiameter)
+                        .transition(.scale(scale: 0.3).combined(with: .opacity))
+                }
+            }
+            .animation(.spring(duration: 0.4, bounce: 0.35), value: viewModel.shownBall)
+            .onChange(of: viewModel.shownBall) { _, number in
+                guard let number, playsSound else { return }
+                let format = String(localized: "game.ballAnnouncement")
+                AccessibilityNotification.Announcement(String(format: format, number)).post()
+            }
+    }
+}
+
+/// "Girar" and "Cantar en voz alta", under the drum on iPhone and iPad. Once all 90 balls are out, "Girar"
+/// turns into "Partida nueva", which starts the game again.
 struct GameControls: View {
     let viewModel: GameViewModel
 
     var body: some View {
         HStack(spacing: DSSpacing.espacioS) {
-            DSButton(systemImage: "arrow.clockwise") {
-                Task { await viewModel.spin() }
+            if viewModel.isGameOver {
+                DSButton(systemImage: "plus") {
+                    Task { await viewModel.startNewGame() }
+                }
+                .localized("game.newGame")
+            } else {
+                DSButton(systemImage: "arrow.clockwise") {
+                    Task { await viewModel.spin() }
+                }
+                .localized("game.spin")
+                .disabled(!viewModel.canSpin)
             }
-            .localized("game.spin")
-            .disabled(viewModel.isSpinning)
             DSIconButton(
                 systemImage: "mic",
                 accessibilityLabel: String(localized: "game.singAloud")

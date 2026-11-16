@@ -47,6 +47,7 @@ Custom fonts named in the tokens must be added to the app bundle (`.ttf`/`.otf`)
 | `DSIconButton(systemImage:accessibilityLabel:action:)` | Round icon-only button beside a `DSButton` over the night. |
 | `DSDrum(radius:turns:)` | The bingo drum. Raising `turns` spins it for 3 s. Radius 150 pt iPhone, 170 pt iPad, 260 pt TV. |
 | `DSCallerBoard(title:counter:drawnNumbers:lastNumber:layout:size:)` | Board of the 90 numbers; drawn ones as balls, the last one ringed. `.portrait` 9×10 or `.landscape` 10×9; sizes `.compact`, `.regular`, `.television`. |
+| `DSBall(number:diameter:)` | The ball that has just come out of the drum, with its number on a cream disc. 180 pt iPhone, 260 pt iPad, 520 pt TV. |
 | `DSBallTone(number:)` | Tone of a ball from 1 to 90, one per ten, with the color of its number. |
 
 New components go in `Sources/BingoghUI/Components/`, use only tokens, are `public` and include a `#Preview`. A component that shows a single text conforms to `DSLocalizableText`; components with several texts take them already localised.
