@@ -42,5 +42,5 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
     preBuildScripts:
       - name: SwiftLint (max 3 violations)
-        script: "\"${SRCROOT}/scripts/lint.sh\""
+        script: "bash \"${SRCROOT}/scripts/lint.sh\""
         basedOnDependencyAnalysis: false
