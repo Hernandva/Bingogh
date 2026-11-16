@@ -22,7 +22,19 @@ struct GameUseCase: GameUseCaseProtocol {
         self.repository = dependencies.resolveRepository()
     }
 
+    /// Checks the game that Home passed and returns only the balls the caller board can show: numbers from
+    /// 1 to 90, each once, in the order they were drawn. A saved file that was edited or damaged never fills
+    /// a square that does not exist or counts a ball twice.
     func execute() async throws -> GameViewData.Draw {
-        startingDraw
+        GameViewData.Draw(drawnNumbers: Self.validNumbers(in: startingDraw.drawnNumbers))
+    }
+}
+
+private extension GameUseCase {
+    static func validNumbers(in drawnNumbers: [Int]) -> [Int] {
+        var seen = Set<Int>()
+        return drawnNumbers.filter { number in
+            (1...GameViewData.totalBalls).contains(number) && seen.insert(number).inserted
+        }
     }
 }
