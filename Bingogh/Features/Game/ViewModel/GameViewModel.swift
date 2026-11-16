@@ -32,6 +32,8 @@ final class GameViewModel {
     private(set) var isReviewing = false
     /// The ball on screen during "Repaso".
     private(set) var reviewedBall: Int?
+    /// Mute: the balls are not read aloud. It is not saved, so it is off every time the game opens.
+    private(set) var isMuted = false
 
     /// The ball shown in place of the drum: the one being reviewed, or the one that has just come out.
     var displayedBall: Int? {
@@ -55,6 +57,8 @@ final class GameViewModel {
 
     /// Time a spin of the drum takes, the same as the `DSDrum` animation.
     private static let spinDuration: Duration = .seconds(3)
+    /// How long a ball stays on screen while muted, when there is no reading to wait for.
+    private static let mutedBallDuration: Duration = .seconds(3)
 
     private let useCase: any GameUseCaseProtocol
     private let externalDisplay: GameExternalDisplay
@@ -130,7 +134,7 @@ final class GameViewModel {
             for number in numbers {
                 guard let self, !Task.isCancelled else { return }
                 self.reviewedBall = number
-                await self.ballCaller.call(number)
+                await self.present(number)
             }
             guard !Task.isCancelled else { return }
             self?.stopReview()
@@ -152,21 +156,34 @@ final class GameViewModel {
         ballBeforeReview = nil
     }
 
-    /// "Cantar en voz alta": shows the last ball that came out and reads it again. It waits while the drum
-    /// spins or "Repaso" plays, which use the same place on screen and the same voice.
-    func singLastBall() {
-        guard !isSpinning, !isReviewing, let number = viewData.draw?.lastNumber else { return }
-        show(number)
+    /// The microphone button: turns mute on or off. Turning it on cuts off the reading in progress; the ball
+    /// on screen then stays for the muted time.
+    func toggleMute() {
+        isMuted.toggle()
+        if isMuted {
+            ballCaller.stop()
+        }
     }
 
-    /// Shows the ball in place of the drum and reads it aloud; the drum comes back when the reading ends.
+    /// Shows the ball in place of the drum while it is presented; the drum comes back afterwards.
     private func show(_ number: Int) {
         hideBall()
         shownBall = number
         hideBallTask = Task { [weak self] in
-            await self?.ballCaller.call(number)
+            await self?.present(number)
             guard !Task.isCancelled else { return }
             self?.shownBall = nil
+        }
+    }
+
+    /// Reads the ball aloud and returns when the reading ends. While muted, or if mute is turned on during the
+    /// reading, it waits the muted time instead, so the ball is still seen.
+    private func present(_ number: Int) async {
+        if !isMuted {
+            await ballCaller.call(number)
+        }
+        if isMuted, !Task.isCancelled {
+            try? await Task.sleep(for: Self.mutedBallDuration)
         }
     }
 

@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Round button with only an SF Symbol over the night: beside a `DSButton` (for example, "Cantar en voz alta")
+/// Round button with only an SF Symbol over the night: beside a `DSButton` (for example, the microphone)
 /// or in a header (for example, "Repaso" on the caller board). `accessibilityLabel` is required and comes
 /// already localised. A disabled button is dimmed.
 public struct DSIconButton: View {
@@ -49,7 +49,7 @@ public struct DSIconButton: View {
 }
 
 #Preview {
-    DSIconButton(systemImage: "mic", accessibilityLabel: "Cantar en voz alta") {}
+    DSIconButton(systemImage: "mic.fill", accessibilityLabel: "Silenciar voz") {}
         .padding()
         .background(DSPalette.noche900)
         .environment(\.colorScheme, .dark)

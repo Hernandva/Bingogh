@@ -76,7 +76,7 @@ struct GameDrumStage: View {
     }
 }
 
-/// "Girar" and "Cantar en voz alta", under the drum on iPhone and iPad. Once all 90 balls are out, "Girar"
+/// "Girar" and the microphone (mute), under the drum on iPhone and iPad. Once all 90 balls are out, "Girar"
 /// turns into "Partida nueva", which starts the game again.
 struct GameControls: View {
     let viewModel: GameViewModel
@@ -97,10 +97,10 @@ struct GameControls: View {
                 .disabled(!viewModel.canSpin)
             }
             DSIconButton(
-                systemImage: "mic",
-                accessibilityLabel: String(localized: "game.singAloud")
+                systemImage: viewModel.isMuted ? "mic.slash.fill" : "mic.fill",
+                accessibilityLabel: String(localized: viewModel.isMuted ? "game.unmute" : "game.mute")
             ) {
-                viewModel.singLastBall()
+                viewModel.toggleMute()
             }
         }
     }

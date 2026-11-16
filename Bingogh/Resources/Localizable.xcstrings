@@ -35,6 +35,23 @@
         }
       }
     },
+    "game.mute" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mute voice"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Silenciar voz"
+          }
+        }
+      }
+    },
     "game.newGame" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -103,23 +120,6 @@
         }
       }
     },
-    "game.singAloud" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Call out loud"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cantar en voz alta"
-          }
-        }
-      }
-    },
     "game.spin" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -161,6 +161,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Game"
+          }
+        }
+      }
+    },
+    "game.unmute" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unmute voice"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar voz"
           }
         }
       }
