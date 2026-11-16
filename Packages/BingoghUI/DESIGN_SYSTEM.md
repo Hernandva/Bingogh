@@ -33,6 +33,7 @@ Custom fonts named in the tokens must be added to the app bundle (`.ttf`/`.otf`)
 | `DSText(_:style:color:)` | Any text. `.counter` is the rounded style of counters such as "24 de 90". |
 | `DSNightScreen { … }` | Root container of screens over the night sky that do not scroll (Inicio). Forces the dark appearance. |
 | `DSNightSky()` | The `gradiente-noche-luna` background with moon, texture, swirls and stars. Used by `DSNightScreen`. |
+| `DSAppIcon(side:)` | The app icon: a cromo ball (27) on the plain night gradient, square, no rounded corners. Its PNG in the app's `AppIcon` is generated: after changing it or the tokens, run `scripts/render_app_icon.sh`. |
 | `DSWordmark(_:)` | The app's name as a serif wordmark: 64 pt on iPhone, 120 pt on iPad. |
 | `DSButton(_:systemImage:style:action:)` | Actions, as capsules with an optional SF Symbol. Styles: `.primary`, `.secondary`, `.destructive`, `.translucent` (over the night sky). |
 | `DSNavigationButton(_:value:systemImage:style:)` | A `DSButton` that pushes a route with `NavigationLink(value:)`. |
