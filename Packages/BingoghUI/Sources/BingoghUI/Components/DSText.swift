@@ -9,6 +9,8 @@ public enum DSTextStyle: Sendable {
     case bodyStrong
     case footnote
     case caption
+    /// Rounded figures for counters such as "24 de 90".
+    case counter
 
     var font: Font {
         switch self {
@@ -19,12 +21,14 @@ public enum DSTextStyle: Sendable {
         case .bodyStrong: DSFont.bodyStrong
         case .footnote: DSFont.footnote
         case .caption: DSFont.caption
+        case .counter: DSTypeScale.contador.monospacedDigit()
         }
     }
 
     @MainActor var defaultColor: Color {
         switch self {
         case .footnote, .caption: DSColor.textSecondary
+        case .counter: DSColor.textPrimary.opacity(0.7)
         default: DSColor.textPrimary
         }
     }

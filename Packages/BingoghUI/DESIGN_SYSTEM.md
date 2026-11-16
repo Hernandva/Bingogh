@@ -30,7 +30,7 @@ Custom fonts named in the tokens must be added to the app bundle (`.ttf`/`.otf`)
 | Component | Use |
 |---|---|
 | `DSScreen { … }` | Root container of every screen: scroll view, background and margins. |
-| `DSText(_:style:color:)` | Any text. |
+| `DSText(_:style:color:)` | Any text. `.counter` is the rounded style of counters such as "24 de 90". |
 | `DSNightScreen { … }` | Root container of screens over the night sky that do not scroll (Inicio). Forces the dark appearance. |
 | `DSNightSky()` | The `gradiente-noche-luna` background with moon, texture, swirls and stars. Used by `DSNightScreen`. |
 | `DSWordmark(_:)` | The app's name as a serif wordmark: 64 pt on iPhone, 120 pt on iPad. |
@@ -41,6 +41,12 @@ Custom fonts named in the tokens must be added to the app bundle (`.ttf`/`.otf`)
 | `DSSectionHeader(_:)` | Header above a group of rows. |
 | `DSListRow(_:subtitle:showsChevron:)` | Row in a list. |
 | `DSCard { … }` | Groups content on a surface. |
+| `DSGameScreen { … }` | Root container of the game (iPhone, iPad and TV): noche-900 to noche-800 gradient, dark appearance, no margins. |
+| `DSSegmentedControl(selection:options:)` | Capsule segmented control over the night (Bombo / Tablero). Titles come localised. |
+| `DSIconButton(systemImage:accessibilityLabel:action:)` | Round icon-only button beside a `DSButton` over the night. |
+| `DSDrum(radius:turns:)` | The bingo drum. Raising `turns` spins it for 3 s. Radius 150 pt iPhone, 170 pt iPad, 260 pt TV. |
+| `DSCallerBoard(title:counter:drawnNumbers:lastNumber:layout:size:)` | Board of the 90 numbers; drawn ones as balls, the last one ringed. `.portrait` 9×10 or `.landscape` 10×9; sizes `.compact`, `.regular`, `.television`. |
+| `DSBallTone(number:)` | Tone of a ball from 1 to 90, one per ten, with the color of its number. |
 
 New components go in `Sources/BingoghUI/Components/`, use only tokens, are `public` and include a `#Preview`. A component that shows a single text conforms to `DSLocalizableText`; components with several texts take them already localised.
 

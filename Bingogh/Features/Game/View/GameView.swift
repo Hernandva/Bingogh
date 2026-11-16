@@ -1,8 +1,11 @@
 import BingoghUI
 import SwiftUI
 
+/// Juego: the drum and the caller board. iPhone shows one at a time, chosen with "Bombo / Tablero";
+/// iPad shows both side by side. The TV layout, `GameTVLayout`, is for the external display over AirPlay.
 struct GameView: View {
     @State private var viewModel: GameViewModel
+    @Environment(\.horizontalSizeClass) private var sizeClass
 
     /// Receives only the container and resolves the view model from it.
     init(dependencies: GameDependencies) {
@@ -10,25 +13,38 @@ struct GameView: View {
     }
 
     var body: some View {
-        DSScreen {
-            DSText(style: .largeTitle).localized("game.title")
-
+        DSGameScreen {
             switch viewModel.state {
             case .idle, .loading:
                 ProgressView()
             case .loaded:
-                // Compose the screen with BingoghUI components fed by `viewModel.viewData`.
-                EmptyView()
+                layout
             case .failed(let message):
                 DSText(message, style: .footnote, color: DSColor.destructive)
+                    .padding(DSSpacing.medium)
             }
         }
         .task { await viewModel.load() }
     }
+
+    @ViewBuilder private var layout: some View {
+        if sizeClass == .regular {
+            GamePadLayout(viewModel: viewModel)
+        } else {
+            GamePhoneLayout(viewModel: viewModel)
+        }
+    }
 }
 
-#Preview {
+#Preview("iPhone") {
     NavigationStack {
-        GameCoordinator().start()
+        GameView(dependencies: GameDependencies(repository: GamePreviewRepository()))
     }
+}
+
+#Preview("iPad", traits: .landscapeLeft) {
+    NavigationStack {
+        GameView(dependencies: GameDependencies(repository: GamePreviewRepository()))
+    }
+    .environment(\.horizontalSizeClass, .regular)
 }

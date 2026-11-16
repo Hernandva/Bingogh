@@ -1,14 +1,14 @@
-import Foundation
 import BingoghData
+import Foundation
 
 protocol GameUseCaseProtocol: Sendable {
-    /// Returns only the data of the response. The view model adds it to its `GameViewData`.
-    func execute() async throws -> GameViewData.Content
+    /// Returns the balls drawn so far in the saved game, or an empty draw when there is no saved game.
+    /// The view model adds it to `GameViewData.draw`.
+    func execute() async throws -> GameViewData.Draw
 }
 
-/// Business logic of Game: reads the Game repository, stored on the device, and returns only the data of
-/// its response, mapped out of the BingoghData types. If the screen also writes data, add a use case that calls
-/// `repository.save(_:)` with a type that conforms to GameRequestProtocol.
+/// Business logic of Game: reads the game in progress from the Game repository, stored on the device, and
+/// returns only the balls drawn so far, mapped out of the BingoghData types.
 struct GameUseCase: GameUseCaseProtocol {
     private let repository: any GameRepositoryProtocol
 
@@ -19,15 +19,12 @@ struct GameUseCase: GameUseCaseProtocol {
         self.repository = dependencies.resolveRepository()
     }
 
-    func execute() async throws -> GameViewData.Content {
-        let response = try await repository.fetch()
-        return Self.content(from: response)
-    }
-}
-
-private extension GameUseCase {
-    /// Maps the fields of the Game response into the data the view model adds to its ViewData.
-    static func content(from response: any GameResponseProtocol) -> GameViewData.Content {
-        GameViewData.Content()
+    func execute() async throws -> GameViewData.Draw {
+        do {
+            let response = try await repository.fetch()
+            return GameViewData.Draw(drawnNumbers: response.drawnNumbers)
+        } catch LocalStoreError.notFound {
+            return .empty
+        }
     }
 }
