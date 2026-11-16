@@ -53,8 +53,8 @@ struct GameReviewButton: View {
 
 /// The drum, or in its place the ball that has just come out or the one being reviewed. When the spin ends the ball replaces the drum
 /// completely until the view model hides it, five seconds later or when "Girar" is pressed again; then the
-/// drum comes back. The drum keeps its place while hidden, so nothing else on screen moves. VoiceOver
-/// announces the ball.
+/// drum comes back. The drum keeps its place while hidden, so nothing else on screen moves. The view model
+/// reads each ball aloud.
 struct GameDrumStage: View {
     let viewModel: GameViewModel
     let radius: CGFloat
@@ -73,11 +73,6 @@ struct GameDrumStage: View {
                 }
             }
             .animation(.spring(duration: 0.4, bounce: 0.35), value: viewModel.displayedBall)
-            .onChange(of: viewModel.displayedBall) { _, number in
-                guard let number, playsSound else { return }
-                let format = String(localized: "game.ballAnnouncement")
-                AccessibilityNotification.Announcement(String(format: format, number)).post()
-            }
     }
 }
 

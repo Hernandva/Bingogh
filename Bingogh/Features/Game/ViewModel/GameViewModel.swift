@@ -26,7 +26,7 @@ final class GameViewModel {
     private(set) var drumTurns = 0
     /// `true` while the drum spins, so "Girar" cannot start another spin.
     private(set) var isSpinning = false
-    /// The ball that has just come out, shown over the drum for a few seconds, or `nil`.
+    /// The ball that has just come out, shown in place of the drum while it is read aloud, or `nil`.
     private(set) var shownBall: Int?
     /// `true` during "Repaso": the balls drawn so far replace the drum one by one, in order.
     private(set) var isReviewing = false
@@ -55,13 +55,10 @@ final class GameViewModel {
 
     /// Time a spin of the drum takes, the same as the `DSDrum` animation.
     private static let spinDuration: Duration = .seconds(3)
-    /// How long the ball that came out stays over the drum, unless "Girar" is pressed again.
-    private static let ballDisplayDuration: Duration = .seconds(5)
-    /// How long each ball stays on screen during "Repaso".
-    private static let reviewBallDuration: Duration = .seconds(2)
 
     private let useCase: any GameUseCaseProtocol
     private let externalDisplay: GameExternalDisplay
+    private let ballCaller: any GameBallCallerProtocol
     private var hideBallTask: Task<Void, Never>?
     private var reviewTask: Task<Void, Never>?
     /// The ball that was showing when "Repaso" started, shown again when it stops.
@@ -71,6 +68,7 @@ final class GameViewModel {
     init(dependencies: GameDependencies) {
         self.useCase = dependencies.resolveUseCase()
         self.externalDisplay = dependencies.resolveExternalDisplay()
+        self.ballCaller = dependencies.resolveBallCaller()
     }
 
     /// The Game screen is on screen: the TV shows this game.
@@ -78,9 +76,10 @@ final class GameViewModel {
         externalDisplay.show(self)
     }
 
-    /// The Game screen has left: the TV goes back to the wordmark.
+    /// The Game screen has left: the TV goes back to the wordmark and any reading stops.
     func disappear() {
         externalDisplay.hide(self)
+        ballCaller.stop()
     }
 
     func load() async {
@@ -94,7 +93,7 @@ final class GameViewModel {
     }
 
     /// "Girar": picks a ball that has not come out yet and spins the drum. When the spin ends, the ball is
-    /// added to the board and shown over the drum for five seconds, and the game is saved.
+    /// added to the board and shown in place of the drum while it is read aloud, and the game is saved.
     func spin() async {
         guard canSpin, let draw = viewData.draw, let number = useCase.drawBall(from: draw) else { return }
         hideBall()
@@ -119,8 +118,8 @@ final class GameViewModel {
         try? await useCase.deleteSavedGame()
     }
 
-    /// "Repaso": hides the drum and shows the balls drawn so far one by one, in the order they came out.
-    /// "Girar" is locked until it stops, either with "Detener" or after the last ball.
+    /// "Repaso": hides the drum and shows the balls drawn so far one by one, in the order they came out, each
+    /// one while it is read aloud. "Girar" is locked until it stops, either with "Detener" or after the last ball.
     func startReview() {
         guard canReview, !isReviewing, let numbers = viewData.draw?.drawnNumbers else { return }
         ballBeforeReview = shownBall
@@ -129,9 +128,9 @@ final class GameViewModel {
         selectedPanel = .drum
         reviewTask = Task { [weak self] in
             for number in numbers {
-                guard !Task.isCancelled else { return }
-                self?.reviewedBall = number
-                try? await Task.sleep(for: Self.reviewBallDuration)
+                guard let self, !Task.isCancelled else { return }
+                self.reviewedBall = number
+                await self.ballCaller.call(number)
             }
             guard !Task.isCancelled else { return }
             self?.stopReview()
@@ -139,11 +138,12 @@ final class GameViewModel {
     }
 
     /// "Detener": ends "Repaso" and leaves the game as it was before it started: the drum, or the ball that
-    /// had just come out, shown again for five seconds.
+    /// had just come out, shown and read again.
     func stopReview() {
         guard isReviewing else { return }
         reviewTask?.cancel()
         reviewTask = nil
+        ballCaller.stop()
         isReviewing = false
         reviewedBall = nil
         if let ball = ballBeforeReview {
@@ -152,21 +152,29 @@ final class GameViewModel {
         ballBeforeReview = nil
     }
 
-    /// "Cantar en voz alta": reading the last ball aloud is not part of the UI yet.
-    func singLastBall() {}
+    /// "Cantar en voz alta": shows the last ball that came out and reads it again. It waits while the drum
+    /// spins or "Repaso" plays, which use the same place on screen and the same voice.
+    func singLastBall() {
+        guard !isSpinning, !isReviewing, let number = viewData.draw?.lastNumber else { return }
+        show(number)
+    }
 
+    /// Shows the ball in place of the drum and reads it aloud; the drum comes back when the reading ends.
     private func show(_ number: Int) {
+        hideBall()
         shownBall = number
         hideBallTask = Task { [weak self] in
-            try? await Task.sleep(for: Self.ballDisplayDuration)
+            await self?.ballCaller.call(number)
             guard !Task.isCancelled else { return }
             self?.shownBall = nil
         }
     }
 
+    /// Hides the ball and cuts off its reading.
     private func hideBall() {
         hideBallTask?.cancel()
         hideBallTask = nil
+        ballCaller.stop()
         shownBall = nil
     }
 }
