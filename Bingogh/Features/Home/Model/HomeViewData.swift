@@ -12,7 +12,7 @@ struct HomeViewData: Equatable, Sendable {
         let drawnNumbers: [Int]
     }
 
-    /// Result of `GameUseCase`: the saved game, or `nil` when there is none (or until it loads).
+    /// Result of `SavedGameUseCase`: the saved game, or `nil` when there is none (or until it loads).
     var savedGame: SavedGame?
 
     /// "Continuar partida" is shown only when there is a game to resume.

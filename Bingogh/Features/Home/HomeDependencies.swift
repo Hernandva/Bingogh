@@ -15,8 +15,8 @@ final class HomeDependencies {
         repository
     }
 
-    func resolveUseCase() -> any GameUseCaseProtocol {
-        GameUseCase(dependencies: self)
+    func resolveUseCase() -> any SavedGameUseCaseProtocol {
+        SavedGameUseCase(dependencies: self)
     }
 
     func resolveViewModel() -> HomeViewModel {

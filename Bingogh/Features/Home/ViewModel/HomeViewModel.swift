@@ -17,7 +17,7 @@ final class HomeViewModel {
     /// Game handed to the next screen by "Continuar partida" or "Partida nueva".
     private(set) var gameToPlay: HomeViewData.SavedGame?
 
-    private let useCase: any GameUseCaseProtocol
+    private let useCase: any SavedGameUseCaseProtocol
 
     /// Receives only the container and resolves what it needs from it.
     init(dependencies: HomeDependencies) {

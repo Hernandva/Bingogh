@@ -1,7 +1,7 @@
 import BingoghData
 import Foundation
 
-protocol GameUseCaseProtocol: Sendable {
+protocol SavedGameUseCaseProtocol: Sendable {
     /// Returns the saved game in progress, or `nil` when there is none.
     /// The view model adds it to `HomeViewData.savedGame`.
     func execute() async throws -> HomeViewData.SavedGame?
@@ -10,7 +10,7 @@ protocol GameUseCaseProtocol: Sendable {
 }
 
 /// Reads and deletes the game in progress in the Game repository.
-struct GameUseCase: GameUseCaseProtocol {
+struct SavedGameUseCase: SavedGameUseCaseProtocol {
     private let repository: any GameRepositoryProtocol
 
     /// Receives only the container and resolves what it needs from it.

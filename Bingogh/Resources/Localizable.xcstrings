@@ -1,19 +1,30 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "home.title" : {
+    "game.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bingogh"
+            "value" : "Game"
+          }
+        }
+      }
+    },
+    "home.continueGame" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue game"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bingogh"
+            "value" : "Continuar partida"
           }
         }
       }
@@ -35,19 +46,19 @@
         }
       }
     },
-    "home.continueGame" : {
+    "home.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Continue game"
+            "value" : "Bingogh"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Continuar partida"
+            "value" : "Bingogh"
           }
         }
       }
