@@ -1,0 +1,13 @@
+{
+  "name": "Bingogh",
+  "slug": "bingogh",
+  "appDirectory": "Bingogh",
+  "rootFeature": "Home",
+  "dataSources": "Packages/BingoghData/Sources/BingoghData",
+  "designSystemPackage": "Packages/BingoghUI",
+  "platforms": [
+    "iphone",
+    "ipad"
+  ],
+  "repositories": {}
+}
