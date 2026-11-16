@@ -30,7 +30,7 @@ public struct DSSegmentedControl<Value: Hashable>: View {
             }
         }
         .padding(2)
-        .frame(minHeight: DSSpacing.xLarge + DSSpacing.xSmall)
+        .frame(height: DSSpacing.xLarge + DSSpacing.xSmall)
         .background(Capsule().fill(DSPalette.crema.opacity(0.12)))
         .animation(.snappy, value: selection)
     }

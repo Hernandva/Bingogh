@@ -38,7 +38,7 @@ struct GamePhoneLayout: View {
 }
 
 #Preview {
-    let dependencies = GameDependencies(repository: GamePreviewRepository())
+    let dependencies = GameDependencies(drawnNumbers: gamePreviewDrawnNumbers)
     let viewModel = dependencies.resolveViewModel()
     DSGameScreen {
         GamePhoneLayout(viewModel: viewModel)

@@ -6,7 +6,8 @@ import SwiftUI
 final class HomeCoordinator: Coordinator {
     /// One case per feature that can be opened from Home.
     enum Route: Hashable {
-        case game
+        /// Opens the game with the saved game, or with an empty one for "Partida nueva".
+        case game(HomeViewData.SavedGame)
         // @codegen:routes
     }
 
@@ -25,8 +26,9 @@ final class HomeCoordinator: Coordinator {
 
     func destination(for route: Route) -> AnyView {
         switch route {
-        case .game:
-            return AnyView(GameCoordinator().start())
+        case .game(let game):
+            let dependencies = GameDependencies(drawnNumbers: game.drawnNumbers)
+            return AnyView(GameCoordinator(dependencies: dependencies).start())
         // @codegen:destinations
         }
     }

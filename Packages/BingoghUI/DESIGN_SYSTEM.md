@@ -35,6 +35,7 @@ Custom fonts named in the tokens must be added to the app bundle (`.ttf`/`.otf`)
 | `DSNightSky()` | The `gradiente-noche-luna` background with moon, texture, swirls and stars. Used by `DSNightScreen`. |
 | `DSWordmark(_:)` | The app's name as a serif wordmark: 64 pt on iPhone, 120 pt on iPad. |
 | `DSButton(_:systemImage:style:action:)` | Actions, as capsules with an optional SF Symbol. Styles: `.primary`, `.secondary`, `.destructive`, `.translucent` (over the night sky). |
+| `DSNavigationButton(_:value:systemImage:style:)` | A `DSButton` that pushes a route with `NavigationLink(value:)`. |
 | `DSButtonGroup { … }` | Stacked buttons: full width on iPhone, 380 pt centred on iPad. |
 | `DSTextField(_:value:)` | Text input. The first parameter is the placeholder. |
 | `DSToggle(_:isOn:)` | Switch with a label. |

@@ -38,13 +38,13 @@ struct GameView: View {
 
 #Preview("iPhone") {
     NavigationStack {
-        GameView(dependencies: GameDependencies(repository: GamePreviewRepository()))
+        GameView(dependencies: GameDependencies(drawnNumbers: gamePreviewDrawnNumbers))
     }
 }
 
 #Preview("iPad", traits: .landscapeLeft) {
     NavigationStack {
-        GameView(dependencies: GameDependencies(repository: GamePreviewRepository()))
+        GameView(dependencies: GameDependencies(drawnNumbers: gamePreviewDrawnNumbers))
     }
     .environment(\.horizontalSizeClass, .regular)
 }

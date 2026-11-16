@@ -29,23 +29,34 @@ public struct DSButton: View, DSLocalizableText {
 
     public var body: some View {
         Button(action: action) {
-            HStack(spacing: DSSpacing.small) {
-                if let systemImage {
-                    Image(systemName: systemImage)
-                        .fontWeight(.bold)
-                        .accessibilityHidden(true)
-                }
-                Text(text)
-            }
-            .font(DSFont.bodyStrong)
-            .frame(maxWidth: .infinity, minHeight: DSSpacing.tapMin + DSSpacing.small)
-            .padding(.horizontal, DSSpacing.medium)
+            DSButtonLabel(text: text, systemImage: systemImage)
         }
         .buttonStyle(DSButtonStyle(style: style))
     }
 }
 
-private struct DSButtonStyle: ButtonStyle {
+/// Content of `DSButton` and `DSNavigationButton`: the optional SF Symbol and the text, full width.
+struct DSButtonLabel: View {
+    let text: String
+    let systemImage: String?
+
+    var body: some View {
+        HStack(spacing: DSSpacing.small) {
+            if let systemImage {
+                Image(systemName: systemImage)
+                    .fontWeight(.bold)
+                    .accessibilityHidden(true)
+            }
+            Text(text)
+        }
+        .font(DSFont.bodyStrong)
+        .frame(maxWidth: .infinity, minHeight: DSSpacing.tapMin + DSSpacing.small)
+        .padding(.horizontal, DSSpacing.medium)
+    }
+}
+
+/// Capsule look of `DSButton` and `DSNavigationButton` for each style.
+struct DSButtonStyle: ButtonStyle {
     let style: DSButton.Style
 
     func makeBody(configuration: Configuration) -> some View {

@@ -6,9 +6,18 @@ import BingoghData
 @MainActor
 final class GameDependencies {
     private let repository: any GameRepositoryProtocol
+    private let startingDraw: GameViewData.Draw
 
-    init(repository: any GameRepositoryProtocol = GameRepository()) {
+    /// - Parameters:
+    ///   - drawnNumbers: Balls already drawn in the game that Home opens: the saved game, or none for a new one.
+    ///   - repository: Where the game in progress is stored.
+    init(drawnNumbers: [Int] = [], repository: any GameRepositoryProtocol = GameRepository()) {
+        self.startingDraw = GameViewData.Draw(drawnNumbers: drawnNumbers)
         self.repository = repository
+    }
+
+    func resolveStartingDraw() -> GameViewData.Draw {
+        startingDraw
     }
 
     func resolveRepository() -> any GameRepositoryProtocol {

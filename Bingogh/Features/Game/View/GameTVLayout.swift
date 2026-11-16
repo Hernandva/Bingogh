@@ -20,7 +20,7 @@ struct GameTVLayout: View {
 }
 
 #Preview(traits: .fixedLayout(width: 1920, height: 1080)) {
-    let dependencies = GameDependencies(repository: GamePreviewRepository())
+    let dependencies = GameDependencies(drawnNumbers: gamePreviewDrawnNumbers)
     let viewModel = dependencies.resolveViewModel()
     DSGameScreen {
         GameTVLayout(viewModel: viewModel)

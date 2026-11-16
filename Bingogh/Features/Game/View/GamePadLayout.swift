@@ -58,7 +58,7 @@ struct GamePadLayout: View {
 }
 
 #Preview(traits: .landscapeLeft) {
-    let dependencies = GameDependencies(repository: GamePreviewRepository())
+    let dependencies = GameDependencies(drawnNumbers: gamePreviewDrawnNumbers)
     let viewModel = dependencies.resolveViewModel()
     DSGameScreen {
         GamePadLayout(viewModel: viewModel)

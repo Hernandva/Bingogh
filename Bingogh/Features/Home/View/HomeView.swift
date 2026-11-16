@@ -23,12 +23,17 @@ struct HomeView: View {
 
     private var actions: some View {
         DSButtonGroup {
-            DSButton(systemImage: "plus") {
-                Task { await viewModel.startNewGame() }
-            }
-            .localized("home.newGame")
-            if viewModel.viewData.canContinueGame {
-                DSButton(systemImage: "play.fill", style: .translucent) { viewModel.continueGame() }
+            DSNavigationButton(value: HomeCoordinator.Route.game(.empty), systemImage: "plus")
+                .localized("home.newGame")
+                .simultaneousGesture(TapGesture().onEnded {
+                    Task { await viewModel.startNewGame() }
+                })
+            if let savedGame = viewModel.viewData.savedGame {
+                DSNavigationButton(
+                    value: HomeCoordinator.Route.game(savedGame),
+                    systemImage: "play.fill",
+                    style: .translucent
+                )
                     .localized("home.continueGame")
                     .transition(.opacity)
             }

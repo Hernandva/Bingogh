@@ -4,7 +4,7 @@ import Foundation
 /// to its own field, so a new result never erases the rest of the data.
 struct HomeViewData: Equatable, Sendable {
     /// A game that Home hands to the next screen: the saved one, or an empty one for a new game.
-    struct SavedGame: Equatable, Sendable {
+    struct SavedGame: Hashable, Sendable {
         /// A game with no balls drawn yet.
         static let empty = SavedGame(drawnNumbers: [])
 
