@@ -11,5 +11,5 @@ public enum DSRadius {
     public static let radioCapsula: CGFloat = 999
     public static let small: CGFloat = 12
     public static let control: CGFloat = 12
-    public static let card: CGFloat = 999
+    public static let card: CGFloat = 20
 }

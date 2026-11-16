@@ -26,8 +26,8 @@ public enum DSTypeScale {
 
 /// Semantic fonts used by the components.
 public enum DSFont {
-    public static let largeTitle = Font.largeTitle
-    public static let title = Font.title
+    public static let largeTitle = Font.system(size: 34, weight: .bold, design: .serif)
+    public static let title = Font.system(size: 28, weight: .bold, design: .serif)
     public static let headline = Font.system(size: 17, weight: .semibold)
     public static let body = Font.system(size: 17, weight: .regular)
     public static let bodyStrong = Font.body.weight(.semibold)

@@ -36,16 +36,16 @@ SWIFT_KEYWORDS = {
 
 # Semantic roles used by the components -> token names that may play that role, in priority order.
 COLOR_ROLES: dict[str, list[str]] = {
-    "background": ["background", "bg", "paper", "canvas", "surface-background", "page"],
-    "surface": ["surface", "card", "surface-1", "elevated", "panel"],
-    "textPrimary": ["text-primary", "text", "ink", "foreground", "fg", "on-surface", "on-background", "label"],
-    "textSecondary": ["text-secondary", "ink-2", "text-muted", "muted", "foreground-muted", "secondary-label"],
-    "accent": ["accent", "primary", "brand", "tint", "action"],
-    "onAccent": ["on-accent", "on-primary", "on-brand", "on-tint"],
-    "fillSecondary": ["fill-secondary", "fill-quiet", "fill", "secondary", "surface-2"],
-    "destructive": ["destructive", "danger", "error", "critical"],
+    "background": ["fondo", "background", "bg", "paper", "canvas", "surface-background", "page"],
+    "surface": ["fondo-elevado", "surface", "card", "surface-1", "elevated", "panel"],
+    "textPrimary": ["texto", "text-primary", "text", "ink", "foreground", "fg", "on-surface", "on-background", "label"],
+    "textSecondary": ["texto-secundario", "text-secondary", "ink-2", "text-muted", "muted", "foreground-muted", "secondary-label"],
+    "accent": ["acento-relleno", "accent", "primary", "brand", "tint", "action"],
+    "onAccent": ["sobre-acento", "on-accent", "on-primary", "on-brand", "on-tint"],
+    "fillSecondary": ["pista", "fill-secondary", "fill-quiet", "fill", "secondary", "surface-2"],
+    "destructive": ["peligro", "destructive", "danger", "error", "critical"],
     "onDestructive": ["on-destructive", "on-danger", "on-error"],
-    "separator": ["separator", "border", "divider", "outline", "stroke"],
+    "separator": ["separador", "separator", "border", "divider", "outline", "stroke"],
 }
 COLOR_FALLBACKS = {
     "background": "Color.clear",
@@ -62,8 +62,8 @@ COLOR_FALLBACKS = {
 
 # Semantic font -> (candidate style names, SwiftUI text style it scales with, fallback)
 FONT_ROLES: dict[str, tuple[list[str], str, str]] = {
-    "largeTitle": (["large-title", "largetitle", "display", "display-large", "h1"], "largeTitle", ".largeTitle"),
-    "title": (["title", "hero-title", "title-1", "h2", "display-medium"], "title", ".title"),
+    "largeTitle": (["titulo-grande", "large-title", "largetitle", "display", "display-large", "h1"], "largeTitle", ".largeTitle"),
+    "title": (["titulo", "title", "hero-title", "title-1", "h2", "display-medium"], "title", ".title"),
     "headline": (["headline", "nav-title", "title-3", "h3", "subtitle"], "headline", ".headline"),
     "body": (["body", "body-regular", "paragraph", "text"], "body", ".body"),
     "bodyStrong": (["body-strong", "body-bold", "body-emphasis", "button", "label"], "body", ".body.weight(.semibold)"),
@@ -265,7 +265,9 @@ def generate(tokens_path: Path, package_dir: Path) -> list[str]:
     tap = next((v for k, v in spacing.items() if re.search(r"tap|touch|hit", k)), 44.0)
     scale = sorted({v for k, v in spacing.items() if not re.search(r"tap|touch|hit", k) and v > 0})
     defaults = [4.0, 8.0, 16.0, 24.0, 32.0]
-    if len(scale) >= 5:
+    if all(d in scale for d in defaults):
+        semantic = defaults
+    elif len(scale) >= 5:
         semantic = [scale[0], scale[1], scale[len(scale) // 2], scale[-2], scale[-1]]
     else:
         semantic = defaults
@@ -291,7 +293,7 @@ def generate(tokens_path: Path, package_dir: Path) -> list[str]:
     median = values[len(values) // 2] if values else 12.0
     small = values[0] if values else 6.0
     control = radius_for(r"control|button", median)
-    card = radius_for(r"card|list|surface|container|panel", max(values) if values else 16.0)
+    card = radius_for(r"card|tarjeta|carton|list|surface|container|panel", max(values) if values else 16.0)
     radius_lines = members({swift_identifier(k): v for k, v in radius.items()},
                            {"small": small, "control": control, "card": card})
     report.append(f"DSRadius small/control/card = {small:g}/{control:g}/{card:g}")
