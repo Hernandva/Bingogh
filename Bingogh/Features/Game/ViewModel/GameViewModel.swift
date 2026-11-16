@@ -122,10 +122,10 @@ final class GameViewModel {
         try? await useCase.deleteSavedGame()
     }
 
-    /// "Repaso": hides the drum and shows the balls drawn so far one by one, in the order they came out, each
+    /// "Repaso": hides the drum and shows the balls drawn so far one by one, from lowest to highest, each
     /// one while it is read aloud. "Girar" is locked until it stops, either with "Detener" or after the last ball.
     func startReview() {
-        guard canReview, !isReviewing, let numbers = viewData.draw?.drawnNumbers else { return }
+        guard canReview, !isReviewing, let numbers = viewData.draw?.drawnNumbers.sorted() else { return }
         ballBeforeReview = shownBall
         hideBall()
         isReviewing = true
