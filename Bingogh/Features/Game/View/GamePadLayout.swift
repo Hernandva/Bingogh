@@ -53,7 +53,7 @@ struct GamePadLayout: View {
     }
 
     private var board: some View {
-        GameCallerBoard(draw: viewModel.viewData.draw, layout: .landscape, size: .regular)
+        GameCallerBoard(draw: viewModel.viewData.draw, layout: .landscape, size: .regular, review: viewModel)
     }
 }
 

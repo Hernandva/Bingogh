@@ -103,6 +103,23 @@
         }
       }
     },
+    "game.review" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repaso"
+          }
+        }
+      }
+    },
     "game.singAloud" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -133,6 +150,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Girar"
+          }
+        }
+      }
+    },
+    "game.stopReview" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detener"
           }
         }
       }

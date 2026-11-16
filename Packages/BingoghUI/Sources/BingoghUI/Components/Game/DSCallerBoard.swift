@@ -1,22 +1,26 @@
 import SwiftUI
 
-/// the caller board: the 90 numbers of the game, with the drawn ones as balls in their tone and the last one
-/// drawn ringed. Its header shows a title and a counter, both already localised.
-public struct DSCallerBoard: View {
-    /// How the 90 numbers are laid out.
-    public enum Layout: Sendable {
-        /// 9 columns of 10 rows, one column per ten (1–10, 11–20…). For iPhone.
-        case portrait
-        /// 10 columns of 9 rows, one row per ten. For iPad and the TV.
-        case landscape
-    }
+/// How the 90 numbers of `DSCallerBoard` are laid out.
+public enum DSCallerBoardLayout: Sendable {
+    /// 9 columns of 10 rows, one column per ten (1–10, 11–20…). For iPhone.
+    case portrait
+    /// 10 columns of 9 rows, one row per ten. For iPad and the TV.
+    case landscape
+}
 
-    /// Scale of the board: `compact` on iPhone, `regular` on iPad and `television` on an external display.
-    public enum Size: Sendable {
-        case compact
-        case regular
-        case television
-    }
+/// Scale of `DSCallerBoard`: `compact` on iPhone, `regular` on iPad and `television` on an external display.
+public enum DSCallerBoardSize: Sendable {
+    case compact
+    case regular
+    case television
+}
+
+/// The caller board: the 90 numbers of the game, with the drawn ones as balls in their tone and the last one
+/// drawn ringed. Its header shows a title and a counter, both already localised, and an optional accessory
+/// after the counter, such as a `DSIconButton`.
+public struct DSCallerBoard<Accessory: View>: View {
+    public typealias Layout = DSCallerBoardLayout
+    public typealias Size = DSCallerBoardSize
 
     private let title: String
     private let counter: String
@@ -24,6 +28,7 @@ public struct DSCallerBoard: View {
     private let lastNumber: Int?
     private let layout: Layout
     private let metrics: Metrics
+    private let accessory: Accessory
 
     public init(
         title: String,
@@ -31,7 +36,8 @@ public struct DSCallerBoard: View {
         drawnNumbers: Set<Int>,
         lastNumber: Int?,
         layout: Layout,
-        size: Size
+        size: Size,
+        @ViewBuilder accessory: () -> Accessory
     ) {
         self.title = title
         self.counter = counter
@@ -39,6 +45,7 @@ public struct DSCallerBoard: View {
         self.lastNumber = lastNumber
         self.layout = layout
         self.metrics = Metrics(size: size)
+        self.accessory = accessory()
     }
 
     public var body: some View {
@@ -58,7 +65,7 @@ public struct DSCallerBoard: View {
     }
 
     private var header: some View {
-        HStack(alignment: .firstTextBaseline) {
+        HStack(spacing: DSSpacing.small) {
             Text(title)
                 .accessibilityAddTraits(.isHeader)
             Spacer()
@@ -66,6 +73,7 @@ public struct DSCallerBoard: View {
                 .fontDesign(.rounded)
                 .monospacedDigit()
                 .foregroundStyle(DSPalette.crema.opacity(0.7))
+            accessory
         }
         .font(metrics.headerFont)
         .foregroundStyle(DSPalette.crema)
@@ -96,6 +104,27 @@ public struct DSCallerBoard: View {
         DSBoardCell(number: number, isDrawn: drawnNumbers.contains(number), isLast: number == lastNumber)
             .font(.system(size: metrics.numberSize, weight: .heavy, design: .rounded))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+public extension DSCallerBoard where Accessory == EmptyView {
+    /// A board with no accessory in its header, such as the one on the TV.
+    init(
+        title: String,
+        counter: String,
+        drawnNumbers: Set<Int>,
+        lastNumber: Int?,
+        layout: Layout,
+        size: Size
+    ) {
+        self.init(
+            title: title,
+            counter: counter,
+            drawnNumbers: drawnNumbers,
+            lastNumber: lastNumber,
+            layout: layout,
+            size: size
+        ) { EmptyView() }
     }
 }
 
@@ -149,7 +178,7 @@ private struct Metrics {
     let numberSize: CGFloat
     let headerFont: Font
 
-    init(size: DSCallerBoard.Size) {
+    init(size: DSCallerBoardSize) {
         switch size {
         case .compact:
             padding = DSSpacing.espacioS

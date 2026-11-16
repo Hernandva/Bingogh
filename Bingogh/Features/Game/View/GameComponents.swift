@@ -1,11 +1,13 @@
 import BingoghUI
 import SwiftUI
 
-/// The caller board of the game with its localised title and counter.
+/// The caller board of the game with its localised title and counter. On iPhone and iPad, `review` adds the
+/// "Repaso" button after the counter, which turns into "Detener" during the review. The TV has no buttons.
 struct GameCallerBoard: View {
     let draw: GameViewData.Draw?
-    let layout: DSCallerBoard.Layout
-    let size: DSCallerBoard.Size
+    let layout: DSCallerBoardLayout
+    let size: DSCallerBoardSize
+    var review: GameViewModel?
 
     var body: some View {
         DSCallerBoard(
@@ -15,11 +17,41 @@ struct GameCallerBoard: View {
             lastNumber: draw?.lastNumber,
             layout: layout,
             size: size
-        )
+        ) {
+            if let review {
+                GameReviewButton(viewModel: review)
+            }
+        }
     }
 }
 
-/// The drum, or the ball that has just come out in its place. When the spin ends the ball replaces the drum
+/// "Repaso" (↺) starts reviewing the balls drawn so far; during the review it turns into "Detener" (■).
+struct GameReviewButton: View {
+    let viewModel: GameViewModel
+
+    var body: some View {
+        if viewModel.isReviewing {
+            DSIconButton(
+                systemImage: "stop.fill",
+                accessibilityLabel: String(localized: "game.stopReview"),
+                size: .small
+            ) {
+                viewModel.stopReview()
+            }
+        } else {
+            DSIconButton(
+                systemImage: "arrow.counterclockwise",
+                accessibilityLabel: String(localized: "game.review"),
+                size: .small
+            ) {
+                viewModel.startReview()
+            }
+            .disabled(!viewModel.canReview)
+        }
+    }
+}
+
+/// The drum, or in its place the ball that has just come out or the one being reviewed. When the spin ends the ball replaces the drum
 /// completely until the view model hides it, five seconds later or when "Girar" is pressed again; then the
 /// drum comes back. The drum keeps its place while hidden, so nothing else on screen moves. VoiceOver
 /// announces the ball.
@@ -31,16 +63,17 @@ struct GameDrumStage: View {
 
     var body: some View {
         DSDrum(radius: radius, turns: viewModel.drumTurns, playsSound: playsSound)
-            .opacity(viewModel.shownBall == nil ? 1 : 0)
-            .scaleEffect(viewModel.shownBall == nil ? 1 : 0.85)
+            .opacity(viewModel.displayedBall == nil ? 1 : 0)
+            .scaleEffect(viewModel.displayedBall == nil ? 1 : 0.85)
             .overlay {
-                if let number = viewModel.shownBall {
+                if let number = viewModel.displayedBall {
                     DSBall(number: number, diameter: ballDiameter)
+                        .id(number)
                         .transition(.scale(scale: 0.3).combined(with: .opacity))
                 }
             }
-            .animation(.spring(duration: 0.4, bounce: 0.35), value: viewModel.shownBall)
-            .onChange(of: viewModel.shownBall) { _, number in
+            .animation(.spring(duration: 0.4, bounce: 0.35), value: viewModel.displayedBall)
+            .onChange(of: viewModel.displayedBall) { _, number in
                 guard let number, playsSound else { return }
                 let format = String(localized: "game.ballAnnouncement")
                 AccessibilityNotification.Announcement(String(format: format, number)).post()
@@ -60,6 +93,7 @@ struct GameControls: View {
                     Task { await viewModel.startNewGame() }
                 }
                 .localized("game.newGame")
+                .disabled(viewModel.isReviewing)
             } else {
                 DSButton(systemImage: "arrow.clockwise") {
                     Task { await viewModel.spin() }

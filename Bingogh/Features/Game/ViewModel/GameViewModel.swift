@@ -28,6 +28,20 @@ final class GameViewModel {
     private(set) var isSpinning = false
     /// The ball that has just come out, shown over the drum for a few seconds, or `nil`.
     private(set) var shownBall: Int?
+    /// `true` during "Repaso": the balls drawn so far replace the drum one by one, in order.
+    private(set) var isReviewing = false
+    /// The ball on screen during "Repaso".
+    private(set) var reviewedBall: Int?
+
+    /// The ball shown in place of the drum: the one being reviewed, or the one that has just come out.
+    var displayedBall: Int? {
+        isReviewing ? reviewedBall : shownBall
+    }
+
+    /// "Repaso" works while the drum is still and at least one ball has come out.
+    var canReview: Bool {
+        !isSpinning && (viewData.draw?.drawnCount ?? 0) > 0
+    }
 
     /// `true` once all 90 balls are out: "Girar" turns into "Partida nueva".
     var isGameOver: Bool {
@@ -36,17 +50,22 @@ final class GameViewModel {
 
     /// "Girar" works while the drum is still and there are balls left in it.
     var canSpin: Bool {
-        !isSpinning && !isGameOver
+        !isSpinning && !isGameOver && !isReviewing
     }
 
     /// Time a spin of the drum takes, the same as the `DSDrum` animation.
     private static let spinDuration: Duration = .seconds(3)
     /// How long the ball that came out stays over the drum, unless "Girar" is pressed again.
     private static let ballDisplayDuration: Duration = .seconds(5)
+    /// How long each ball stays on screen during "Repaso".
+    private static let reviewBallDuration: Duration = .seconds(2)
 
     private let useCase: any GameUseCaseProtocol
     private let externalDisplay: GameExternalDisplay
     private var hideBallTask: Task<Void, Never>?
+    private var reviewTask: Task<Void, Never>?
+    /// The ball that was showing when "Repaso" started, shown again when it stops.
+    private var ballBeforeReview: Int?
 
     /// Receives only the container and resolves what it needs from it.
     init(dependencies: GameDependencies) {
@@ -98,6 +117,39 @@ final class GameViewModel {
         // As with saving, a failed delete must not block the new game on screen: the first ball drawn
         // saves the new game over the old one.
         try? await useCase.deleteSavedGame()
+    }
+
+    /// "Repaso": hides the drum and shows the balls drawn so far one by one, in the order they came out.
+    /// "Girar" is locked until it stops, either with "Detener" or after the last ball.
+    func startReview() {
+        guard canReview, !isReviewing, let numbers = viewData.draw?.drawnNumbers else { return }
+        ballBeforeReview = shownBall
+        hideBall()
+        isReviewing = true
+        selectedPanel = .drum
+        reviewTask = Task { [weak self] in
+            for number in numbers {
+                guard !Task.isCancelled else { return }
+                self?.reviewedBall = number
+                try? await Task.sleep(for: Self.reviewBallDuration)
+            }
+            guard !Task.isCancelled else { return }
+            self?.stopReview()
+        }
+    }
+
+    /// "Detener": ends "Repaso" and leaves the game as it was before it started: the drum, or the ball that
+    /// had just come out, shown again for five seconds.
+    func stopReview() {
+        guard isReviewing else { return }
+        reviewTask?.cancel()
+        reviewTask = nil
+        isReviewing = false
+        reviewedBall = nil
+        if let ball = ballBeforeReview {
+            show(ball)
+        }
+        ballBeforeReview = nil
     }
 
     /// "Cantar en voz alta": reading the last ball aloud is not part of the UI yet.

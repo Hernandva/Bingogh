@@ -19,7 +19,7 @@ struct GamePhoneLayout: View {
             case .drum:
                 drumPanel
             case .board:
-                GameCallerBoard(draw: viewModel.viewData.draw, layout: .portrait, size: .compact)
+                GameCallerBoard(draw: viewModel.viewData.draw, layout: .portrait, size: .compact, review: viewModel)
             }
         }
         .padding(.horizontal, DSSpacing.medium)
@@ -31,7 +31,12 @@ struct GamePhoneLayout: View {
             Spacer(minLength: 0)
             GameDrumStage(viewModel: viewModel, radius: 150, ballDiameter: 180)
             Spacer(minLength: 0)
-            DSText(GameCounter.text(for: viewModel.viewData.draw), style: .counter)
+            // "Repaso" also sits beside this counter: the review plays on this panel, so "Detener" must be
+            // reachable here too, not only on the board.
+            HStack(spacing: DSSpacing.small) {
+                DSText(GameCounter.text(for: viewModel.viewData.draw), style: .counter)
+                GameReviewButton(viewModel: viewModel)
+            }
             GameControls(viewModel: viewModel)
         }
     }

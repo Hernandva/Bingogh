@@ -44,9 +44,9 @@ Custom fonts named in the tokens must be added to the app bundle (`.ttf`/`.otf`)
 | `DSCard { … }` | Groups content on a surface. |
 | `DSGameScreen { … }` | Root container of the game (iPhone, iPad and TV): noche-900 to noche-800 gradient, dark appearance, no margins. |
 | `DSSegmentedControl(selection:options:)` | Capsule segmented control over the night (Bombo / Tablero). Titles come localised. |
-| `DSIconButton(systemImage:accessibilityLabel:action:)` | Round icon-only button beside a `DSButton` over the night. |
+| `DSIconButton(systemImage:accessibilityLabel:size:action:)` | Round icon-only button over the night: `.regular` beside a `DSButton`, `.small` (44 pt) in a header. |
 | `DSDrum(radius:turns:)` | The bingo drum. Raising `turns` spins it for 3 s. Radius 150 pt iPhone, 170 pt iPad, 260 pt TV. |
-| `DSCallerBoard(title:counter:drawnNumbers:lastNumber:layout:size:)` | Board of the 90 numbers; drawn ones as balls, the last one ringed. `.portrait` 9×10 or `.landscape` 10×9; sizes `.compact`, `.regular`, `.television`. |
+| `DSCallerBoard(title:counter:drawnNumbers:lastNumber:layout:size:accessory:)` | Board of the 90 numbers; drawn ones as balls, the last one ringed. `.portrait` 9×10 or `.landscape` 10×9; sizes `.compact`, `.regular`, `.television`. The optional `accessory` goes after the counter. |
 | `DSBall(number:diameter:)` | The ball that has just come out of the drum, with its number on a cream disc. 180 pt iPhone, 260 pt iPad, 520 pt TV. |
 | `DSBallTone(number:)` | Tone of a ball from 1 to 90, one per ten, with the color of its number. |
 
