@@ -145,7 +145,7 @@ adds the route to the parent coordinator and updates this file.
 <!-- codegen:feature-registry:start -->
 | Feature | Opened from | Repository |
 |---|---|---|
-| `Home` | — (root) | — |
+| `Home` | — (root) | `Game` |
 <!-- codegen:feature-registry:end -->
 
 ## App map

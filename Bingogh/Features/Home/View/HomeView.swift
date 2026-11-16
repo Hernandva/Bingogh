@@ -23,12 +23,17 @@ struct HomeView: View {
 
     private var actions: some View {
         DSButtonGroup {
-            // Wire these to NavigationLink(value: HomeCoordinator.Route.<child>) once the game features exist.
-            DSButton(systemImage: "plus") {}
-                .localized("home.newGame")
-            DSButton(systemImage: "play.fill", style: .translucent) {}
-                .localized("home.continueGame")
+            DSButton(systemImage: "plus") {
+                Task { await viewModel.startNewGame() }
+            }
+            .localized("home.newGame")
+            if viewModel.viewData.canContinueGame {
+                DSButton(systemImage: "play.fill", style: .translucent) { viewModel.continueGame() }
+                    .localized("home.continueGame")
+                    .transition(.opacity)
+            }
         }
+        .animation(.default, value: viewModel.viewData.canContinueGame)
     }
 }
 
