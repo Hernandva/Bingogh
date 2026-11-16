@@ -123,4 +123,5 @@ python3 scripts/codegen/new_repo.py --name <RepositoryName> --type local --stora
 <!-- codegen:repository-registry:start -->
 | Repository | Type | Storage | Public API | Folder |
 |---|---|---|---|---|
+| `Game` | Local | JSON files | `GameRepositoryProtocol` | `Sources/BingoghData/Repositories/Game` |
 <!-- codegen:repository-registry:end -->
