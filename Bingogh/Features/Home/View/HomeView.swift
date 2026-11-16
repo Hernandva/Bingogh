@@ -1,6 +1,7 @@
 import BingoghUI
 import SwiftUI
 
+/// Inicio: the wordmark over the night sky and the two ways into a game.
 struct HomeView: View {
     @State private var viewModel: HomeViewModel
 
@@ -10,20 +11,24 @@ struct HomeView: View {
     }
 
     var body: some View {
-        DSScreen {
-            DSText(style: .largeTitle).localized("home.title")
-
-            switch viewModel.state {
-            case .idle, .loading:
-                ProgressView()
-            case .loaded:
-                // Compose the screen with BingoghUI components fed by `viewModel.viewData`.
-                EmptyView()
-            case .failed(let message):
-                DSText(message, style: .footnote, color: DSColor.destructive)
-            }
+        DSNightScreen {
+            Spacer()
+            DSWordmark().localized("home.title")
+            Spacer()
+                .frame(minHeight: DSSpacing.large, maxHeight: DSSpacing.espacioXxxl * 2)
+            actions
         }
         .task { await viewModel.load() }
+    }
+
+    private var actions: some View {
+        DSButtonGroup {
+            // Wire these to NavigationLink(value: HomeCoordinator.Route.<child>) once the game features exist.
+            DSButton(systemImage: "plus") {}
+                .localized("home.newGame")
+            DSButton(systemImage: "play.fill", style: .translucent) {}
+                .localized("home.continueGame")
+        }
     }
 }
 

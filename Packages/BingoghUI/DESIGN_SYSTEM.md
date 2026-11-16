@@ -31,7 +31,11 @@ Custom fonts named in the tokens must be added to the app bundle (`.ttf`/`.otf`)
 |---|---|
 | `DSScreen { … }` | Root container of every screen: scroll view, background and margins. |
 | `DSText(_:style:color:)` | Any text. |
-| `DSButton(_:style:action:)` | Actions. Styles: `.primary`, `.secondary`, `.destructive`. |
+| `DSNightScreen { … }` | Root container of screens over the night sky that do not scroll (Inicio). Forces the dark appearance. |
+| `DSNightSky()` | The `gradiente-noche-luna` background with moon, texture, swirls and stars. Used by `DSNightScreen`. |
+| `DSWordmark(_:)` | The app's name as a serif wordmark: 64 pt on iPhone, 120 pt on iPad. |
+| `DSButton(_:systemImage:style:action:)` | Actions, as capsules with an optional SF Symbol. Styles: `.primary`, `.secondary`, `.destructive`, `.translucent` (over the night sky). |
+| `DSButtonGroup { … }` | Stacked buttons: full width on iPhone, 380 pt centred on iPad. |
 | `DSTextField(_:value:)` | Text input. The first parameter is the placeholder. |
 | `DSToggle(_:isOn:)` | Switch with a label. |
 | `DSSectionHeader(_:)` | Header above a group of rows. |
