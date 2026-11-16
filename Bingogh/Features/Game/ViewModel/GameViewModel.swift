@@ -45,11 +45,23 @@ final class GameViewModel {
     private static let ballDisplayDuration: Duration = .seconds(5)
 
     private let useCase: any GameUseCaseProtocol
+    private let externalDisplay: GameExternalDisplay
     private var hideBallTask: Task<Void, Never>?
 
     /// Receives only the container and resolves what it needs from it.
     init(dependencies: GameDependencies) {
         self.useCase = dependencies.resolveUseCase()
+        self.externalDisplay = dependencies.resolveExternalDisplay()
+    }
+
+    /// The Game screen is on screen: the TV shows this game.
+    func appear() {
+        externalDisplay.show(self)
+    }
+
+    /// The Game screen has left: the TV goes back to the wordmark.
+    func disappear() {
+        externalDisplay.hide(self)
     }
 
     func load() async {

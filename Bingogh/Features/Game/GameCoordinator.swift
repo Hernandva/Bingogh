@@ -22,6 +22,12 @@ final class GameCoordinator: Coordinator {
             }
     }
 
+    /// Root view of the external display (a TV over AirPlay): the game open on the iPhone or iPad, in its TV
+    /// layout. Started by the external display scene in `App/ExternalDisplaySceneDelegate.swift`.
+    func startExternalDisplay() -> some View {
+        GameExternalDisplayView(display: dependencies.resolveExternalDisplay())
+    }
+
     func destination(for route: Route) -> AnyView {
         switch route {
         // @codegen:destinations

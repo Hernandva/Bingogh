@@ -25,6 +25,8 @@ struct GameView: View {
             }
         }
         .task { await viewModel.load() }
+        .onAppear { viewModel.appear() }
+        .onDisappear { viewModel.disappear() }
     }
 
     @ViewBuilder private var layout: some View {

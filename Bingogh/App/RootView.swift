@@ -9,5 +9,6 @@ struct RootView: View {
             HomeCoordinator().start()
         }
         .tint(DSColor.accent)
+        .externalDisplayAccessory()
     }
 }

@@ -7,13 +7,24 @@ import BingoghData
 final class GameDependencies {
     private let repository: any GameRepositoryProtocol
     private let startingDraw: GameViewData.Draw
+    private let externalDisplay: GameExternalDisplay
 
     /// - Parameters:
     ///   - drawnNumbers: Balls already drawn in the game that Home opens: the saved game, or none for a new one.
     ///   - repository: Where the game in progress is stored.
-    init(drawnNumbers: [Int] = [], repository: any GameRepositoryProtocol = GameRepository()) {
+    ///   - externalDisplay: Where the game is shared with the TV over AirPlay.
+    init(
+        drawnNumbers: [Int] = [],
+        repository: any GameRepositoryProtocol = GameRepository(),
+        externalDisplay: GameExternalDisplay = .shared
+    ) {
         self.startingDraw = GameViewData.Draw(drawnNumbers: drawnNumbers)
         self.repository = repository
+        self.externalDisplay = externalDisplay
+    }
+
+    func resolveExternalDisplay() -> GameExternalDisplay {
+        externalDisplay
     }
 
     func resolveStartingDraw() -> GameViewData.Draw {
