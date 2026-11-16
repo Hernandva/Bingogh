@@ -1,19 +1,24 @@
 import SwiftUI
 
 /// The bingo drum: a golden cage with balls inside. Each time `turns` grows, the cage and the balls spin for
-/// three seconds. With Reduce Motion the drum does not spin. It is decorative, so VoiceOver skips it.
+/// three seconds, with the sound of the drum. With Reduce Motion the drum does not spin, but it still sounds.
+/// It is decorative, so VoiceOver skips it.
 public struct DSDrum: View {
     private let radius: CGFloat
     private let turns: Int
+    private let playsSound: Bool
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// - Parameters:
     ///   - radius: Radius of the cage: 150 pt on iPhone, 170 pt on iPad and 260 pt on a TV.
     ///   - turns: Number of spins so far. Increase it by one to spin the drum once.
-    public init(radius: CGFloat, turns: Int = 0) {
+    ///   - playsSound: Whether each spin plays the sound of the drum. Turn it off on a second drum that shows
+    ///     the same game, such as the one on the TV, so the sound does not play twice.
+    public init(radius: CGFloat, turns: Int = 0, playsSound: Bool = true) {
         self.radius = radius
         self.turns = turns
+        self.playsSound = playsSound
     }
 
     /// Time a spin takes, so callers can wait for it to end.
@@ -31,6 +36,11 @@ public struct DSDrum: View {
         }
         .frame(width: center.x * 2, height: center.y * 2)
         .animation(reduceMotion ? nil : .timingCurve(0.5, 0, 0.25, 1, duration: 3), value: turns)
+        .onChange(of: turns) { oldTurns, newTurns in
+            if playsSound && newTurns > oldTurns {
+                DSDrumSound.shared.play()
+            }
+        }
         .accessibilityHidden(true)
     }
 

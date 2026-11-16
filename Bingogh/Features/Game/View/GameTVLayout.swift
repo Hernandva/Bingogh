@@ -9,7 +9,7 @@ struct GameTVLayout: View {
 
     var body: some View {
         HStack(spacing: DSSpacing.espacioMega * 2) {
-            DSDrum(radius: 260, turns: viewModel.drumTurns)
+            DSDrum(radius: 260, turns: viewModel.drumTurns, playsSound: false)
                 .frame(maxHeight: .infinity)
             GameCallerBoard(draw: viewModel.viewData.draw, layout: .landscape, size: .television)
         }
