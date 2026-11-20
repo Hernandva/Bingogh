@@ -34,7 +34,10 @@ struct GameExternalDisplayView: View {
 
 #Preview(traits: .fixedLayout(width: 1280, height: 720)) {
     let display = GameExternalDisplay()
-    let viewModel = GameDependencies(drawnNumbers: gamePreviewDrawnNumbers, externalDisplay: display)
+    let viewModel = GameDependencies(drawnNumbers: [
+        3, 41, 12, 22, 52, 63, 44, 84, 35, 56, 66, 7,
+        27, 87, 18, 38, 58, 68, 9, 29, 49, 79, 70, 47
+    ], externalDisplay: display)
         .resolveViewModel()
     GameExternalDisplayView(display: display)
         .task {

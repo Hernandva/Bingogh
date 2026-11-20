@@ -40,13 +40,19 @@ struct GameView: View {
 
 #Preview("iPhone") {
     NavigationStack {
-        GameView(dependencies: GameDependencies(drawnNumbers: gamePreviewDrawnNumbers))
+        GameView(dependencies: GameDependencies(drawnNumbers: [
+            3, 41, 12, 22, 52, 63, 44, 84, 35, 56, 66, 7,
+            27, 87, 18, 38, 58, 68, 9, 29, 49, 79, 70, 47
+        ]))
     }
 }
 
 #Preview("iPad", traits: .landscapeLeft) {
     NavigationStack {
-        GameView(dependencies: GameDependencies(drawnNumbers: gamePreviewDrawnNumbers))
+        GameView(dependencies: GameDependencies(drawnNumbers: [
+            3, 41, 12, 22, 52, 63, 44, 84, 35, 56, 66, 7,
+            27, 87, 18, 38, 58, 68, 9, 29, 49, 79, 70, 47
+        ]))
     }
     .environment(\.horizontalSizeClass, .regular)
 }

@@ -112,11 +112,3 @@ enum GameCounter {
         String(format: String(localized: "game.counter"), draw?.drawnCount ?? 0, GameViewData.totalBalls)
     }
 }
-
-#if DEBUG
-/// A game in progress with the 24 balls of the design, for the previews.
-let gamePreviewDrawnNumbers = [
-    3, 41, 12, 22, 52, 63, 44, 84, 35, 56, 66, 7,
-    27, 87, 18, 38, 58, 68, 9, 29, 49, 79, 70, 47
-]
-#endif
